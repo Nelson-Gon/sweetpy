@@ -7,6 +7,8 @@ def extractor(my_list: list, *elem: int) -> int:
     """
     if not isinstance(my_list,list):
        raise ValueError("Expected a list.")
+
+    else:
        [[print("Element: ", elem,
             "Index: ", my_list.index(elem),
             "Count: ", my_list.count(elem),
