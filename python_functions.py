@@ -5,7 +5,9 @@ def extractor(my_list: list, *elem: int) -> int:
     :param my_list: A list
     :param elem: Integers(for now).
     """
-    [[print("Element: ", elem,
+    if not isinstance(my_list,list):
+       raise ValueError("Expected a list.")
+       [[print("Element: ", elem,
             "Index: ", my_list.index(elem),
             "Count: ", my_list.count(elem),
             end="\n")
