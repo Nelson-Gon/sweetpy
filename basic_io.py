@@ -1,74 +1,107 @@
-# Looking at the basics of reading and writing files aka i/o
-
-# Can use open(filename,mode ie rw or r+)
-# Best used in conjuction with with to avoid the much harder to debug tr-catch blocks
-# with open('file_name') as f:
-#    read_data = f.read()
-
-# Without with, manually close f with f.close
-# Reading from another directory requires a relative path.
 import os
-# os has important tools, somehow changing the directory from the terminal won't work.
-# Need to change directory with os tools
-os.getcwd()
-
-os.chdir('newpath')
-# list all directories in cd
-os.listdir(#null or relaive path)
-with open('somefile.txt') as f:
-    read_path = f.read()
-
-f.closed
-read_path
-os.listdir()
-f = open('somefile.txt')
-f.closed
-# read reads the entire file
-f.read()
-# readline reads the first line
-f.readline()
-
-for line in f:
-    print(line, end= '')
-
-# Read all lines with readlines
-list(f)
-os
-f.closed
-f.readline()
-from os import read
-# check that with really closes the file once done.
-
-# read_path should return the file albeit in a funny way.
-# Methods of file objects
-# Taken from SO, lists as package modules.
-import scipy
-import pkgutil
-package = scipy
-for importer,  modname, ispkg in pkgutil.walk_packages(path=None, onerror =lambda x: None):
-    print(modname)
-
-# List for specific package:
-for importer, modname, ispkg in pkgutil.walk_packages(path=package.__path__, prefix=package.__name__+'.' , onerror=lambda x: None):
-    print(modname)
-
-f = open('somefile.txt','r+')
-
-# For some reason most os methods are not available, not even in the docs
-# seek, realines and the like
-
-# Dealing with json
-# Deserialize: reconstruct data from str repr
-# Serialize: make a str repr of the data
 import json
+import requests
+from requests.exceptions import HTTPError
+# Get api access to NobelPrize data
+# Use requests.get
+# 200 is OK
+# action determined by get and post
+# get is to retrieve
+response = requests.get("http://api.nobelprize.org/v1/prize.json")
 
-json.dumps([1, 'simple', 'list'])
+# store response and use it to retrieve info
+response.status_code
+# returns 200, implying success.
+# test if the response was successful:
 
-# dump dumps to  a text file
-f.read()
-json.dump({'Hi':'boy'},f)
 
-# load decodes JSON
+def test_response(response):
+    if response.status_code == 200:
+        print("Successs")
+    elif response.status_code == 404:
+        print("Not found!")
 
-json.load(f)
-import pickle
+
+
+
+test_response(response)
+# Convert text to dict with json loads
+json.loads(response.text)
+# Better way is to use .json
+res_dict = response.json()
+
+type(res_dict)
+
+# get each author and year
+import re
+
+authors = []
+
+[type(i) for i in res_dict["prizes"]]
+
+# All dictionaries
+# Get each unqiue dictionary
+# Append to a table or some other format, perhaps print
+# Check length of this result
+import itertools
+
+len(res_dict["prizes"])
+
+res = res_dict["prizes"]
+
+
+nobels = []
+
+for val in res:
+    for key, value in val.items():
+        if re.match("lau+", key):
+            nobels.append((key, value))
+
+def extract_data(match):
+    for nobel in nobels:
+        if isinstance(nobel, tuple):
+            for key, value in nobel[1][0].items():
+                if re.match(eval(repr(match)), key):
+                    print(value)
+
+
+# Extract the nobel's first names
+extract_data("first+")
+
+# Extract their surnames
+
+extract_data("sur+")
+
+# Extract their motivation
+
+extract_data("mot+")
+
+# Extract how many shared the prize
+
+extract_data("shar+")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
