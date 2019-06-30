@@ -193,5 +193,175 @@ class TestStats(unittest.TestCase):
 
 # Batteries included
 
+# std extended
+# Output formatting
+# reprlib
+import reprlib
 
+reprlib.repr(set("supercaligragilisticexpialidocious"))
 
+# repr provides an abbreviated display
+# pprint
+import pprint
+
+t =[[["black", "cyan"], "white",
+     ["green", "red"]], [["magenta",
+                          "yellow"],
+                         "blue "]]
+
+pprint.pprint(t, width=30)
+
+# textwrap
+
+import textwrap
+
+doc  = "The wrap() method is just like fill()" \
+       "except that it returns a list of strings" \
+       "instead of one big string with new lines to" \
+       "separate the wrapped lines."
+
+print(textwrap.fill(doc, width= 40))
+
+print(textwrap.wrap(doc, width= 50))
+
+# Access database of culture specific data formats with locale
+# with locale
+
+import locale
+
+locale.setlocale(locale.LC_ALL,
+                 "English_United States.1252")
+
+["English_United States.1252" in locale.locale_alias.values()]
+
+import re
+my_regex = re.compile("en.*")
+list(filter(my_regex.findall,
+            locale.locale_alias.values()))
+
+# locale.LC_ALL similar to unix LC_ALL and serves to override all
+# other locale settings.
+# default is C
+# POSIX C alias
+locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
+# Returns a mapping of conventions.
+conventions = locale.localeconv()
+x = 1234567.8
+
+locale.format("%d", x, grouping= True)
+
+# Format strings.
+
+locale.format_string("%s.%f",
+                     (conventions['currency_symbol'],
+            conventions['frac_digits'],
+                 x), grouping= True)
+
+# Templating
+# Template in string with a simplified syntax suitable for editing
+# by end users. Allows app customization..
+
+from string import Template
+
+t = Template('${village}folk send $$10 to '
+             '$cause.')
+
+t.substitute(village= "Nottingham",
+             cause = "the ditch fund")
+
+sci = Template('${name} loves to code in ' 
+               '$language.')
+sci.substitute(name = "Nelson", language= "Python")
+
+# safe_substitute to avoid key name error.
+
+t = Template('Return the $item to the $owner')
+
+d = dict(item = 'unladen swallow')
+
+t.substitute(d)
+
+# KeyError
+
+# Override with safe_substitute
+t.safe_substitute(d)
+
+# subclasses can be used to set a custom delimiter for
+# instance
+import time, os.path
+
+photo_files = ['img_01.jpg', 'img_02.jpg', 'img_03.jpg']
+
+class BatchRename(Template):
+    delimiter = "%"
+
+fmt = input('Enter rename style '
+            '(%d-date %n-seqnum %f-format): ')
+
+t = BatchRename(fmt)
+
+date = time.strftime("%d%b%y")
+date
+
+for i, filename in enumerate(photo_files):
+     base, ext = os.path.splitext(filename)
+     newname = t.substitute(d=date,
+                            n =i, f=ext)
+     print('{0} --> {1}'.format(filename,
+                                 newname))
+
+# Working with binary data record layouts.
+# struct pack and unpack
+# Multi threading, useful for I/O while running some other app
+# in the background.
+
+# Tools to work with lists.
+
+from array import array
+
+a = array('H', [4000, 10, 700, 22222])
+
+sum(a)
+a[1:3]
+
+# collections
+from collections import deque
+
+d = deque(["task1", "task2","task3"])
+
+d.append("task4")
+d
+print("Handling", d.popleft())
+# pop is pop right.
+d.pop()
+
+import bisect
+scores = [(100, 'perl'), (200, 'tcl') , (400, 'lua')]
+
+#insort insert sort
+bisect.insort(scores, (300, 'rust'))
+scores
+# locates the insertion point
+bisect.bisect_left(scores, (100000, 'r'))
+scores.insert(4,(100000, 'r'))
+
+scores
+
+# heapq implements heaps.
+
+from heapq import heapify, heappop, heappush
+
+data = [1, 3, 4, 5, 8, 9]
+# Rearrange into heap order
+heapify(data)
+data
+# git push heappush
+heappush(data, -5)
+# Fetch last three smallest entries.
+[heappop(data) for i in range(3)]
+
+# Decimal floating point arithmetic.
+from decimal import *
+round(Decimal('0.70') * Decimal('1.05'), 2)
+round(.70 * 1.05, 2)
+getcontext().prec
