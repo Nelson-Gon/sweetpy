@@ -128,3 +128,156 @@ re.findall('python', text, flags=  re.IGNORECASE)
 
 re.sub('python', 'snake', text, flags=re.IGNORECASE)
 
+# Specifying a regex of the shortest match
+
+# Aim find shortest possible
+str_pat = re.compile(r'\"(.*)\"')
+
+text1 = 'Computer says "no."'
+str_pat.findall(text1)
+
+text2 = 'Computer says "no." Phone says "yes."'
+
+str_pat.findall(text2)
+
+# * greedy, add ? to match exact ie make it non greedy
+
+str_pat = re.compile(r'\"(.*?)\"')
+str_pat.findall(text2)
+
+# Multiline regex
+
+# Typical usage when using regex involving dot(.)
+
+# dot matches anything but a new line
+# Matching C style comments
+comment = re.compile(r'/\*(.*?)\*/')
+
+text1 = '/* This is a comment */'
+text2 = '''/* This is a 
+ multiline comment */'''
+
+comment.findall(text1)
+comment.findall(text2)
+# Fails to match text2
+
+# Use a non capture group
+comment = re.compile(r'/\*((?:.| \n)*?)\*/')
+comment.findall(text2)
+
+# Normalize Unicode Text to  std repr
+s1 = 'Spicy Jalape\u00f1o'
+s2 = 'Spicy Jalapen\u0303o'
+
+s1
+s2
+# s1 U + 00F1
+# s2 U + 0303
+
+# import unicodedata
+import unicodedata
+
+t1 = unicodedata.normalize("NFC", s1)
+t2 = unicodedata.normalize("NFC", s2)
+t1
+t2
+
+print(ascii(t1))
+# More like iconv
+# NFC and NFD
+# Unicode meets regex
+num =  re.compile('\d+')
+# ascii digits
+num.match('123')
+# arabic
+num.match('\u0661\u0662\u0663')
+
+# strip unwanted charcaters from strings
+s = ' hello world \n'
+s
+# lstrip removes leading white space
+s.lstrip()
+# lagging whitespace removed
+
+s.rstrip()
+
+t = '---hello====='
+
+t.lstrip('-')
+t.rstrip("=")
+t.strip("=-")
+
+# Use replace to remove white space in the middle
+
+s = ' hello       world    \n'
+
+s.strip()
+s.replace('\s+','')
+# terrible regex to achieve the same
+re.sub('\s(?=\s)|^\s|\n+','',s)
+re.sub('\s+','',s)
+s
+re.sub('\s(?=\s)|\s(?<=\w)|\n','',s)
+
+# sanitizing and cleaning up text
+script_kiddie = 'pýtĥöñ'
+script_kiddie
+# normalise with data.normalise
+
+# use str.translate
+
+s = 'pýtĥöñ\fis\tawesome\r\n'
+s
+# Make a translation table
+# ord returns unicode for a character string
+remap = {ord('\t'): ' ',
+         ord('\f'): ' ',
+         ord('\r'): None
+}
+
+a = s.translate(remap)
+a
+# None equivalent to NULL?
+# Building bigger tables
+import sys
+cmb_chrs = dict.fromkeys(c
+        for c in range(sys.maxunicode)
+                if unicodedata.combining(chr(c)))
+
+cmb_chrs
+b = unicodedata.normalize("NFD", a)
+b.translate(cmb_chrs)
+
+# text alignment
+
+text = 'Hello World'
+
+text.ljust(20)
+text.rjust(20)
+text.center(15,"=")
+#fill character accepted
+text.rjust(12,"*")
+format(text, '>20')
+format(text, '<20')
+format(text, '^20')
+format(text, '=^20')
+
+'{:>10s} {:>10s}'.format('Hello', "World")
+
+format(1.23345, '>10.2f')
+
+# string concantentation
+
+parts = ['Is', 'Chicago', 'Not', 'Chicago?']
+
+''.join(parts)
+','.join(parts)
+' '.join(parts)
+"  ".join(parts)
+# use +
+print('{} {}'.format("Is Chicago","Not Chicago?"))
+# + inefficient memory wise
+data = ["IBM", 50, 190]
+','.join(repr(d) for d in data)
+
+print(1,2,3,sep=":")
